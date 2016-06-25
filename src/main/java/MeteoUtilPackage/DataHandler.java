@@ -44,11 +44,7 @@ public class DataHandler {
     }
 
     public static Integer getWindSpeed(XSSFRow row) {
-        Integer windSpeed = getInteger(row, 2, 0);
-//        if (windSpeed != null && (windSpeed < 0 || windSpeed > MAX_WIND_SPEED)) {
-//            throw new IllegalArgumentException("FileName: " + FileWorker.getCurrentFile().getName() + ", SheetName: " +  SheetWorker.getCurrentSheet().getSheetName()  + ", #Row: " + (RowWorker.getCurrentRow().getRowNum() + 1) + ", Wind speed in column 'C' is not valid. Equals: " + windSpeed);
-//        }
-        return windSpeed;
+        return getInteger(row, 2, 0);
     }
 
     public static Integer getWindRush(XSSFRow row) {

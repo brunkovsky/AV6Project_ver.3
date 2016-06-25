@@ -37,7 +37,8 @@ public class ModelCleaner {
     public static List<String> checkErrors(List<Model> models) {
         List<String> result = new ArrayList<>();
         for (Model model :models) {
-             result.add(Checker.checkMaxWindSpeed(model));
+            result.add(Checker.checkWindSpeed(model));
+            result.add(Checker.checkWindRush(model));
         }
         return result;
     }
@@ -71,9 +72,16 @@ public class ModelCleaner {
         private static final double MAX_QFE = 1050;
         private static final double MAX_PRECIPITATION = 100;
 
-        private static String checkMaxWindSpeed(Model model) {
+        private static String checkWindSpeed(Model model) {
             if (model.getWindSpeed() != null && (model.getWindSpeed() < 0 || model.getWindSpeed() > MAX_WIND_SPEED)) {
                 return "FileName: " + FileWorker.getCurrentFile().getName() + ", SheetName: " +  SheetWorker.getCurrentSheet().getSheetName()  + ", #Row: " + (RowWorker.getCurrentRow().getRowNum() + 1) + ", Wind speed in column 'C' is not valid. Equals: " + model.getWindSpeed();
+            }
+            return "";
+        }
+
+        private static String checkWindRush(Model model) {
+            if (model.getWindRush() != null && (model.getWindRush() < MIN_WIND_RUSH || model.getWindRush() > MAX_WIND_RUSH)) {
+                return "FileName: " + FileWorker.getCurrentFile().getName() + ", SheetName: " +  SheetWorker.getCurrentSheet().getSheetName()  + ", #Row: " + (RowWorker.getCurrentRow().getRowNum() + 1) + ", Wind rush in column 'D' is not valid. Equals: " + model.getWindRush();
             }
             return "";
         }
