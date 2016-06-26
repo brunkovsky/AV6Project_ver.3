@@ -35,12 +35,34 @@ public class ModelCleaner {
     }
 
     public static List<String> checkErrors(List<Model> models) {
+        List<String> result = generateErrorsList(models);
+        removeEmptyRecords(result);
+        return result;
+    }
+
+    private static List<String> generateErrorsList(List<Model> models) {
         List<String> result = new ArrayList<>();
         for (Model model :models) {
             result.add(Checker.checkWindSpeed(model));
             result.add(Checker.checkWindRush(model));
+            result.add(Checker.checkWindVisibility(model));
+            result.add(Checker.checkOctantsNumerator(model));
+            result.add(Checker.checkOctantsDenominator(model));
+            result.add(Checker.checkCloudiness(model));
+            result.add(Checker.checkTemperature(model));
+            result.add(Checker.checkDewPointTemperature(model));
+            result.add(Checker.checkRelativityHumidity(model));
         }
         return result;
+    }
+
+    private static void removeEmptyRecords(List<String> result) {
+        Iterator<String> iterator = result.iterator();
+        while (iterator.hasNext()) {
+            if (iterator.next().equals("")) {
+                iterator.remove();
+            }
+        }
     }
 
     public static List<String> checkWarnings(List<Model> models) {
@@ -56,7 +78,7 @@ public class ModelCleaner {
         private static final int MAX_CLOUDINESS = 6000;
         private static final double MIN_TEMPERATURE = -50;
         private static final double MAX_TEMPERATURE = 50;
-        private static final double MIN_DEW_POINT_TEMPERATURE= -50;
+        private static final double MIN_DEW_POINT_TEMPERATURE = -50;
         private static final double MAX_DEW_POINT_TEMPERATURE = 50;
         private static final int MAX_RELATIVITY_HUMIDITY = 100;
         private static final double MAX_ABSOLUTE_HUMIDITY = 103.3;
@@ -82,6 +104,55 @@ public class ModelCleaner {
         private static String checkWindRush(Model model) {
             if (model.getWindRush() != null && (model.getWindRush() < MIN_WIND_RUSH || model.getWindRush() > MAX_WIND_RUSH)) {
                 return "FileName: " + FileWorker.getCurrentFile().getName() + ", SheetName: " +  SheetWorker.getCurrentSheet().getSheetName()  + ", #Row: " + (RowWorker.getCurrentRow().getRowNum() + 1) + ", Wind rush in column 'D' is not valid. Equals: " + model.getWindRush();
+            }
+            return "";
+        }
+
+        private static String checkWindVisibility(Model model) {
+            if (model.getVisibility() != null && (model.getVisibility() < 0 || model.getVisibility() > MAX_WIND_VISIBILITY)) {
+                return "FileName: " + FileWorker.getCurrentFile().getName() + ", SheetName: " +  SheetWorker.getCurrentSheet().getSheetName()  + ", #Row: " + (RowWorker.getCurrentRow().getRowNum() + 1) + ", Visibility in column 'E' is not valid. Equals: " + model.getVisibility();
+            }
+            return "";
+        }
+
+        private static String checkOctantsNumerator(Model model) {
+            if (model.getOctantsNumerator() != null && (model.getOctantsNumerator() < 0 || model.getOctantsNumerator() > MAX_OCTANTS)) {
+                return "FileName: " + FileWorker.getCurrentFile().getName() + ", SheetName: " +  SheetWorker.getCurrentSheet().getSheetName()  + ", #Row: " + (RowWorker.getCurrentRow().getRowNum() + 1) + ", Octants Numerator in column 'I' is not valid. Equals: " + model.getOctantsNumerator();
+            }
+            return "";
+        }
+
+        private static String checkOctantsDenominator(Model model) {
+            if (model.getOctantsDenominator() != null && (model.getOctantsDenominator() < 0 || model.getOctantsDenominator() > MAX_OCTANTS)) {
+                return "FileName: " + FileWorker.getCurrentFile().getName() + ", SheetName: " +  SheetWorker.getCurrentSheet().getSheetName()  + ", #Row: " + (RowWorker.getCurrentRow().getRowNum() + 1) + ", Octants Numerator in column 'I' is not valid. Equals: " + model.getOctantsDenominator();
+            }
+            return "";
+        }
+
+        private static String checkCloudiness(Model model) {
+            if (model.getCloudiness() != null && (model.getCloudiness() < 0 || model.getCloudiness() > MAX_CLOUDINESS)) {
+                return "FileName: " + FileWorker.getCurrentFile().getName() + ", SheetName: " + SheetWorker.getCurrentSheet().getSheetName() + ", #Row: " + (RowWorker.getCurrentRow().getRowNum() + 1) + ", Cloudiness in column 'K' is not valid. Equals: " + model.getCloudiness();
+            }
+            return "";
+        }
+
+        private static String checkTemperature(Model model) {
+            if (model.getTemperature() != null && (model.getTemperature() < MIN_TEMPERATURE || model.getTemperature() > MAX_TEMPERATURE)) {
+                return "FileName: " + FileWorker.getCurrentFile().getName() + ", SheetName: " +  SheetWorker.getCurrentSheet().getSheetName()  + ", #Row: " + (RowWorker.getCurrentRow().getRowNum() + 1) + ", Temperature in column 'L' is not valid. Equals: " + model.getTemperature();
+            }
+            return "";
+        }
+
+        private static String checkDewPointTemperature(Model model) {
+            if (model.getDewPointTemperature() != null && (model.getDewPointTemperature() < MIN_DEW_POINT_TEMPERATURE || model.getDewPointTemperature() > MAX_DEW_POINT_TEMPERATURE)) {
+                return "FileName: " + FileWorker.getCurrentFile().getName() + ", SheetName: " +  SheetWorker.getCurrentSheet().getSheetName()  + ", #Row: " + (RowWorker.getCurrentRow().getRowNum() + 1) + ", Dew point temperature in column 'M' is not valid. Equals: " + model.getDewPointTemperature();
+            }
+            return "";
+        }
+
+        private static String checkRelativityHumidity(Model model) {
+            if (model.getRelativityHumidity() != null && (model.getRelativityHumidity() < 0 || model.getRelativityHumidity() > MAX_RELATIVITY_HUMIDITY)) {
+                return "FileName: " + FileWorker.getCurrentFile().getName() + ", SheetName: " +  SheetWorker.getCurrentSheet().getSheetName()  + ", #Row: " + (RowWorker.getCurrentRow().getRowNum() + 1) + ", Relativity humidity in column 'N' is not valid. Equals: " + model.getRelativityHumidity();
             }
             return "";
         }
